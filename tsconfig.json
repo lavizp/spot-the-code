@@ -1,0 +1,3 @@
+{
+  "extends": "@spot-the-spot/config/tsconfig.base.json"
+}
