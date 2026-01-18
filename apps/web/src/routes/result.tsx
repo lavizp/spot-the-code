@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { createFileRoute } from '@tanstack/react-router'
 import { ArrowRight, MapIcon, Trophy } from 'lucide-react'
-
+//TODO: make zustand logic to handle game state and map API
 export const Route = createFileRoute('/result')({
   component: RouteComponent,
 })
