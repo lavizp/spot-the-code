@@ -3,7 +3,6 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import "leaflet/dist/leaflet.css"
 import { Toaster } from "@/components/ui/sonner";
 
-import Header from "../components/header";
 import appCss from "../index.css?url";
 
 export interface RouterAppContext {}

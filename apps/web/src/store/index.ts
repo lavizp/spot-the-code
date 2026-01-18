@@ -5,7 +5,7 @@ import type { GameStore } from './types';
 import { createGameSlice } from './slices/gameSlice';
 
 
-export const useStore = create<GameStore>()(
+export const useGameStore = create<GameStore>()(
   devtools(
     persist(
       immer((...a) => ({

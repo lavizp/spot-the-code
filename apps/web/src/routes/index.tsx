@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useGameStore } from "@/store";
 import { ArrowRight, Globe } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -7,6 +8,14 @@ export const Route = createFileRoute("/")({
 });
 
 function HomeComponent() {
+  const startGame = useGameStore((state) => state.startGame);
+  const navigate = useNavigate();
+
+  const handleStart = () => {
+    startGame();
+    navigate({ to: '/result' });
+  };
+
   return (
     <div className="min-h-screen bg-[#fdf2f8] flex flex-col items-center justify-center p-6 relative overflow-hidden font-sans text-slate-900">
          
@@ -29,7 +38,7 @@ function HomeComponent() {
              Can you guess the location from a single generated image?
            </p>
    
-           <Button className="text-xl py-4 px-12 w-full md:w-auto">
+           <Button onClick={handleStart} className="text-xl py-4 px-12 w-full md:w-auto">
              Start Exploring <ArrowRight className="w-6 h-6 ml-2" strokeWidth={3} />
            </Button>
    

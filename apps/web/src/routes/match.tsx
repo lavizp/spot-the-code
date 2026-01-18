@@ -1,9 +1,46 @@
 import { Button } from "@/components/ui/button";
-import { Expand, Loader } from "lucide-react";
-import { useState } from "react";
+import { Expand } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useGameStore } from "@/store";
+import { useNavigate, createFileRoute } from "@tanstack/react-router";
+
+export const Route = createFileRoute('/match')({
+  component: Match,
+})
+
 export function Match() {
   const [isMapMain, setIsMapMain] = useState(true);
   const toggleView = () => setIsMapMain(!isMapMain);
+  
+  const navigate = useNavigate();
+  const { 
+    currentRound, 
+    imageUrl, 
+    selected, 
+    select, 
+    submitGuess, 
+    isPlaying 
+  } = useGameStore();
+
+  const handleGuess = () => {
+    if (selected) {
+      submitGuess(selected);
+      navigate({ to: '/result' });
+    }
+  };
+
+  const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
+     const mockLat = 48.8566 + (Math.random() - 0.5) * 10;
+     const mockLng = 2.3522 + (Math.random() - 0.5) * 10;
+     select([mockLat, mockLng]);
+  };
+
+  useEffect(() => {
+     if (!isPlaying) {
+         navigate({ to: '/' });
+     }
+  }, [isPlaying, navigate]);
+
 
   return (
     <div className="h-screen w-full relative bg-slate-100 overflow-hidden flex flex-col">
@@ -11,7 +48,7 @@ export function Match() {
       {/* Top Bar */}
       <div className="absolute top-0 left-0 right-0 z-30 p-4 pointer-events-none flex justify-between">
          <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-4 py-2 rounded-xl font-black text-xl flex items-center gap-2 pointer-events-auto">
-            <span className="text-emerald-500">Round</span> 2
+            <span className="text-emerald-500">Round</span> {currentRound}
          </div>
       </div>
 
@@ -22,13 +59,20 @@ export function Match() {
           <div className="absolute inset-0 z-0">
              {isMapMain ? (
                 /* Map is Main */
-                <div className="w-full h-full relative">
+                <div className="w-full h-full relative bg-blue-100 cursor-crosshair" onClick={handleMapClick}>
+                    <div className="absolute inset-0 flex items-center justify-center text-slate-400 pointer-events-none">
+                        <span className="bg-white/50 p-2 rounded">Map Placeholder - Click anywhere to pin location</span>
+                    </div>
+                    {selected && (
+                        <div className="absolute top-1/2 left-1/2 w-4 h-4 bg-red-500 rounded-full border-2 border-white transform -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+                    )}
+                    
                     {/* Guess Button Overlay on Map */}
-                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
+                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20" onClick={(e) => e.stopPropagation()}>
                        <Button 
-                          onClick={()=>{}} 
-                          // disabled={!gameState.userGuess}
-                          className={`transform transition-all duration-300 ${true ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}
+                          onClick={handleGuess} 
+                          disabled={!selected}
+                          className={`transform transition-all duration-300 ${selected ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}
                        >
                           Make Guess!
                        </Button>
@@ -37,11 +81,8 @@ export function Match() {
              ) : (
                 /* Image is Main */
                 <div className="w-full h-full bg-black flex items-center justify-center">
-                  {false ? (
-                      <div className="flex flex-col items-center">
-                          <Loader className="w-12 h-12 text-white animate-spin mb-4" />
-                          <div className="text-white font-bold text-lg animate-pulse">PAINTING THE WORLD...</div>
-                      </div>
+                  {imageUrl ? (
+                      <img src={imageUrl} className="w-full h-full object-cover" alt="Location" />
                   ) : (
                       <div className="text-red-400 font-bold">Error loading visual.</div>
                   )}
@@ -62,16 +103,12 @@ export function Match() {
              {isMapMain ? (
                 /* Mini Image */
                 <div className="w-full h-full bg-slate-200">
-                  {/*{gameState.generatedImage && <img src={gameState.generatedImage} className="w-full h-full object-cover" alt="Mini" />}*/}
+                  {imageUrl && <img src={imageUrl} className="w-full h-full object-cover" alt="Mini" />}
                 </div>
              ) : (
                 /* Mini Map */
-                <div className="w-full h-full pointer-events-none"> {/* Pointer events none so click passes to container toggle */}
-                   {/*<WorldMap 
-                      interactive={false} // Static in mini view
-                      selectedLocation={gameState.userGuess}
-                      className="bg-blue-200"
-                   />*/}
+                <div className="w-full h-full pointer-events-none bg-blue-100 flex items-center justify-center"> 
+                   <span className="text-xs text-slate-500">Map</span>
                 </div>
              )}
           </div>
