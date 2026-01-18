@@ -1,17 +1,22 @@
-import type { StateCreator } from 'zustand';
+import {create} from 'zustand';
+import { devtools, persist } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
 import type { GameStore } from './types';
+import { createGameSlice } from './slices/gameSlice';
 
-export const createGameSlice: StateCreator<
-  GameStore,
-  [],
-  [],
-  GameStore
-  > = (set) => ({
-    id: 'game-1',
-    level: 1,
-    target: [],
-    selected: [],
-    score: 0,
-    select: (point) => set(()=>({selected: point})),
-    endGame: () => set(() => ({level:0, score:0, selected:[], target:[] })),
-})
+
+export const useStore = create<GameStore>()(
+  devtools(
+    persist(
+      immer((...a) => ({
+        ...createGameSlice(...a)
+      })),
+      {
+        name: 'app-storage',
+        partialize: (state) => ({
+          
+        })
+      }
+    )
+  )
+)
