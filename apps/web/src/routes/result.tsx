@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { ArrowRight, MapIcon, Trophy, RefreshCcw } from 'lucide-react'
 import { useGameStore } from "@/store"
+import { gameActions } from "@/store/actions/gameActions"
 import { useEffect } from 'react'
 
 export const Route = createFileRoute('/result')({
@@ -14,26 +15,24 @@ function RouteComponent() {
     roundDistance, 
     roundScore, 
     score, 
-    nextRound, 
     isGameOver, 
     currentRound, 
     totalRounds, 
-    resetGame,
     isPlaying
   } = useGameStore();
 
   const handleNext = () => {
      if (isGameOver || currentRound >= totalRounds) {
-        nextRound(); // This will set isGameOver = true if we are at last round
+        gameActions.nextRound(); // This will set isGameOver = true if we are at last round
         if (currentRound >= totalRounds) {
-            resetGame();
+            gameActions.resetGame();
             navigate({ to: '/' });
         } else {
-            nextRound(); // Setup next round
+            gameActions.nextRound(); // Setup next round
             navigate({ to: '/match' });
         }
      } else {
-        nextRound();
+        gameActions.nextRound();
         navigate({ to: '/match' });
      }
   }

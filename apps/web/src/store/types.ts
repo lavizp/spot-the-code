@@ -14,11 +14,11 @@ export type GameState ={
 }
 
 export type GameActions= {
-  startGame: () => void
-  submitGuess: (point: number[]) => void
-  nextRound: () => void
-  resetGame: () => void
-  select:(point: number[]) => void
+  setStartGame: (target: number[], imageUrl: string) => void
+  setGuessResult: (point: number[], distance: number, roundScore: number) => void
+  setNextRound: (target: number[], imageUrl: string) => void
+  setGameOver: () => void
+  select: (point: number[]) => void
   endGame: () => void
 }
 

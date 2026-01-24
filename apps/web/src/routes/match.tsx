@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Expand } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useGameStore } from "@/store";
+import { gameActions } from "@/store/actions/gameActions";
 import { useNavigate, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute('/match')({
@@ -18,13 +19,12 @@ export function Match() {
     imageUrl, 
     selected, 
     select, 
-    submitGuess, 
     isPlaying 
   } = useGameStore();
 
   const handleGuess = () => {
     if (selected) {
-      submitGuess(selected);
+      gameActions.submitGuess(selected);
       navigate({ to: '/result' });
     }
   };

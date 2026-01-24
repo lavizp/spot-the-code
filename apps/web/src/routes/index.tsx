@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useGameStore } from "@/store";
+import { gameActions } from "@/store/actions/gameActions";
 import { ArrowRight, Globe } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -8,12 +8,11 @@ export const Route = createFileRoute("/")({
 });
 
 function HomeComponent() {
-  const startGame = useGameStore((state) => state.startGame);
   const navigate = useNavigate();
 
   const handleStart = () => {
-    startGame();
-    navigate({ to: '/result' });
+    gameActions.startGame();
+    navigate({ to: '/match' });
   };
 
   return (
