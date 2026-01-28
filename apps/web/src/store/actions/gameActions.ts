@@ -11,7 +11,11 @@ const MOCK_LOCATIONS = [
 function deg2rad(deg: number) {
   return deg * (Math.PI / 180)
 }
-
+const getRandomLocationAndImage = (): Promise<{location: number[], image: string}> => {
+  const randomImage = ''
+  const location = [1,2]
+  return Promise.resolve({image: randomImage, location})
+}
 function calculateDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
   const R = 6371; // Radius of the earth in km
   const dLat = deg2rad(lat2 - lat1);

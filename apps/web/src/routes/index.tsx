@@ -12,7 +12,10 @@ function HomeComponent() {
 
   const handleStart = () => {
     gameActions.startGame();
-    navigate({ to: '/match' });
+    navigate({
+      to: '/match/round/$roundid',
+      params: {roundid: '1'}
+    });
   };
 
   return (

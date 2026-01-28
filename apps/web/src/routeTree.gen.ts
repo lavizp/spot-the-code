@@ -10,17 +10,13 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResultRouteImport } from './routes/result'
-import { Route as MatchRouteImport } from './routes/match'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MatchRoundRoundidIndexRouteImport } from './routes/match/round/$roundid/index'
+import { Route as MatchRoundRoundidResultRouteImport } from './routes/match/round/$roundid/result'
 
 const ResultRoute = ResultRouteImport.update({
   id: '/result',
   path: '/result',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MatchRoute = MatchRouteImport.update({
-  id: '/match',
-  path: '/match',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -28,35 +24,58 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MatchRoundRoundidIndexRoute = MatchRoundRoundidIndexRouteImport.update({
+  id: '/match/round/$roundid/',
+  path: '/match/round/$roundid/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MatchRoundRoundidResultRoute = MatchRoundRoundidResultRouteImport.update({
+  id: '/match/round/$roundid/result',
+  path: '/match/round/$roundid/result',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/match': typeof MatchRoute
   '/result': typeof ResultRoute
+  '/match/round/$roundid/result': typeof MatchRoundRoundidResultRoute
+  '/match/round/$roundid': typeof MatchRoundRoundidIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/match': typeof MatchRoute
   '/result': typeof ResultRoute
+  '/match/round/$roundid/result': typeof MatchRoundRoundidResultRoute
+  '/match/round/$roundid': typeof MatchRoundRoundidIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/match': typeof MatchRoute
   '/result': typeof ResultRoute
+  '/match/round/$roundid/result': typeof MatchRoundRoundidResultRoute
+  '/match/round/$roundid/': typeof MatchRoundRoundidIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/match' | '/result'
+  fullPaths:
+    | '/'
+    | '/result'
+    | '/match/round/$roundid/result'
+    | '/match/round/$roundid'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/match' | '/result'
-  id: '__root__' | '/' | '/match' | '/result'
+  to: '/' | '/result' | '/match/round/$roundid/result' | '/match/round/$roundid'
+  id:
+    | '__root__'
+    | '/'
+    | '/result'
+    | '/match/round/$roundid/result'
+    | '/match/round/$roundid/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  MatchRoute: typeof MatchRoute
   ResultRoute: typeof ResultRoute
+  MatchRoundRoundidResultRoute: typeof MatchRoundRoundidResultRoute
+  MatchRoundRoundidIndexRoute: typeof MatchRoundRoundidIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -68,13 +87,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResultRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/match': {
-      id: '/match'
-      path: '/match'
-      fullPath: '/match'
-      preLoaderRoute: typeof MatchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -82,13 +94,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/match/round/$roundid/': {
+      id: '/match/round/$roundid/'
+      path: '/match/round/$roundid'
+      fullPath: '/match/round/$roundid'
+      preLoaderRoute: typeof MatchRoundRoundidIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/match/round/$roundid/result': {
+      id: '/match/round/$roundid/result'
+      path: '/match/round/$roundid/result'
+      fullPath: '/match/round/$roundid/result'
+      preLoaderRoute: typeof MatchRoundRoundidResultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  MatchRoute: MatchRoute,
   ResultRoute: ResultRoute,
+  MatchRoundRoundidResultRoute: MatchRoundRoundidResultRoute,
+  MatchRoundRoundidIndexRoute: MatchRoundRoundidIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
