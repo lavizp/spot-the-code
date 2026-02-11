@@ -1,64 +1,47 @@
-import { useGameStore } from "@/store"
+import { useGameStore } from "@/store";
+import { CODE_SNIPPETS } from "@/data/codes";
 
-const MOCK_LOCATIONS = [
-  { lat: 48.8566, lng: 2.3522, image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34' },
-  { lat: 40.7128, lng: -74.0060, image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9' }, 
-  { lat: 35.6762, lng: 139.6503, image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26' },
-  { lat: 51.5074, lng: -0.1278, image: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad' }, 
-  { lat: -33.8688, lng: 151.2093, image: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9' },
-];
+const LANGUAGES = Object.keys(CODE_SNIPPETS);
 
-function deg2rad(deg: number) {
-  return deg * (Math.PI / 180)
-}
-const getRandomLocationAndImage = (): Promise<{location: number[], image: string}> => {
-  const randomImage = ''
-  const location = [1,2]
-  return Promise.resolve({image: randomImage, location})
-}
-function calculateDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
-  const R = 6371; // Radius of the earth in km
-  const dLat = deg2rad(lat2 - lat1);
-  const dLon = deg2rad(lng2 - lng1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2)
-    ;
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const d = R * c; // Distance in km
-  return d;
-}
+const getRandomSnippetAndOptions = () => {
+  const correctLanguage = LANGUAGES[Math.floor(Math.random() * LANGUAGES.length)];
+  const snippets = CODE_SNIPPETS[correctLanguage as keyof typeof CODE_SNIPPETS];
+  const snippet = snippets[Math.floor(Math.random() * snippets.length)];
 
-function calculateScore(distance: number): number {
-    return Math.max(0, Math.round(5000 * Math.exp(-distance / 2000)));
-}
+  // Select 3 other random languages for options
+  const otherLanguages = LANGUAGES.filter((lang) => lang !== correctLanguage);
+  // Simple shuffle
+  const shuffledOthers = [...otherLanguages].sort(() => 0.5 - Math.random());
+  const wrongOptions = shuffledOthers.slice(0, 3);
+
+  const options = [...wrongOptions, correctLanguage].sort(() => 0.5 - Math.random());
+
+  return { snippet, correctLanguage, options };
+};
 
 export const gameActions = {
   startGame: () => {
-    const randomIndex = Math.floor(Math.random() * MOCK_LOCATIONS.length);
-    const loc = MOCK_LOCATIONS[randomIndex];
-    useGameStore.getState().setStartGame([loc.lat, loc.lng], loc.image);
+    const { snippet, correctLanguage, options } = getRandomSnippetAndOptions();
+    useGameStore.getState().setStartGame(snippet, correctLanguage, options);
   },
 
-  submitGuess: (point: number[]) => {
-    const { target } = useGameStore.getState();
-    if(!target || target.length < 2) return;
+  submitGuess: (selectedLanguage: string) => {
+    const { correctLanguage } = useGameStore.getState();
     
-    const distance = calculateDistance(target[0], target[1], point[0], point[1]);
-    const roundScore = calculateScore(distance);
+    // Simple scoring: 1000 if correct, 0 if wrong
+    const isCorrect = selectedLanguage === correctLanguage;
+    const roundScore = isCorrect ? 1000 : 0;
 
-    useGameStore.getState().setGuessResult(point, distance, roundScore);
+    useGameStore.getState().setGuessResult(selectedLanguage, roundScore);
   },
 
   nextRound: () => {
     const { currentRound, totalRounds } = useGameStore.getState();
     if (currentRound >= totalRounds) {
-        useGameStore.getState().setGameOver();
+      useGameStore.getState().setGameOver();
     } else {
-        const randomIndex = Math.floor(Math.random() * MOCK_LOCATIONS.length);
-        const loc = MOCK_LOCATIONS[randomIndex];
-        useGameStore.getState().setNextRound([loc.lat, loc.lng], loc.image);
+      const { snippet, correctLanguage, options } = getRandomSnippetAndOptions();
+      useGameStore.getState().setNextRound(snippet, correctLanguage, options);
     }
   },
 

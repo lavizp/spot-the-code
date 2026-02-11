@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResultRouteImport } from './routes/result'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MatchRoundRoundidIndexRouteImport } from './routes/match/round/$roundid/index'
-import { Route as MatchRoundRoundidResultRouteImport } from './routes/match/round/$roundid/result'
 
 const ResultRoute = ResultRouteImport.update({
   id: '/result',
@@ -29,52 +28,34 @@ const MatchRoundRoundidIndexRoute = MatchRoundRoundidIndexRouteImport.update({
   path: '/match/round/$roundid/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MatchRoundRoundidResultRoute = MatchRoundRoundidResultRouteImport.update({
-  id: '/match/round/$roundid/result',
-  path: '/match/round/$roundid/result',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/result': typeof ResultRoute
-  '/match/round/$roundid/result': typeof MatchRoundRoundidResultRoute
   '/match/round/$roundid': typeof MatchRoundRoundidIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/result': typeof ResultRoute
-  '/match/round/$roundid/result': typeof MatchRoundRoundidResultRoute
   '/match/round/$roundid': typeof MatchRoundRoundidIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/result': typeof ResultRoute
-  '/match/round/$roundid/result': typeof MatchRoundRoundidResultRoute
   '/match/round/$roundid/': typeof MatchRoundRoundidIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/result'
-    | '/match/round/$roundid/result'
-    | '/match/round/$roundid'
+  fullPaths: '/' | '/result' | '/match/round/$roundid'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/result' | '/match/round/$roundid/result' | '/match/round/$roundid'
-  id:
-    | '__root__'
-    | '/'
-    | '/result'
-    | '/match/round/$roundid/result'
-    | '/match/round/$roundid/'
+  to: '/' | '/result' | '/match/round/$roundid'
+  id: '__root__' | '/' | '/result' | '/match/round/$roundid/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ResultRoute: typeof ResultRoute
-  MatchRoundRoundidResultRoute: typeof MatchRoundRoundidResultRoute
   MatchRoundRoundidIndexRoute: typeof MatchRoundRoundidIndexRoute
 }
 
@@ -101,20 +82,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MatchRoundRoundidIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/match/round/$roundid/result': {
-      id: '/match/round/$roundid/result'
-      path: '/match/round/$roundid/result'
-      fullPath: '/match/round/$roundid/result'
-      preLoaderRoute: typeof MatchRoundRoundidResultRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ResultRoute: ResultRoute,
-  MatchRoundRoundidResultRoute: MatchRoundRoundidResultRoute,
   MatchRoundRoundidIndexRoute: MatchRoundRoundidIndexRoute,
 }
 export const routeTree = rootRouteImport

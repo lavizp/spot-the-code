@@ -6,59 +6,69 @@ export const createGameSlice: StateCreator<
   [],
   [],
   GameStore
-  > = (set) => ({
-    id: 'game-1',
-    level: 1,
-    target: [],
-    selected: null,
+> = (set) => ({
+  // Game State
+  score: 0,
+  isPlaying: false,
+  currentRound: 1,
+  totalRounds: 5,
+  isGameOver: false,
+  
+  // Round State
+  currentCodeSnippet: null,
+  correctLanguage: null,
+  languageOptions: [],
+  selectedLanguage: null,
+  roundScore: 0,
+
+  setStartGame: (snippet: string, language: string, options: string[]) => {
+    set({
+      isPlaying: true,
+      currentRound: 1,
+      score: 0,
+      isGameOver: false,
+      currentCodeSnippet: snippet,
+      correctLanguage: language,
+      languageOptions: options,
+      selectedLanguage: null,
+      roundScore: 0,
+    });
+  },
+
+  setGuessResult: (selected: string, roundScore: number) => {
+    set((state) => ({
+      selectedLanguage: selected,
+      roundScore: roundScore,
+      score: state.score + roundScore,
+    }));
+  },
+
+  setNextRound: (snippet: string, language: string, options: string[]) => {
+    set((state) => ({
+      currentRound: state.currentRound + 1,
+      currentCodeSnippet: snippet,
+      correctLanguage: language,
+      languageOptions: options,
+      selectedLanguage: null,
+      roundScore: 0,
+    }));
+  },
+
+  setGameOver: () => {
+    set({ isGameOver: true, isPlaying: false });
+  },
+
+  select: (language: string) => set(() => ({ selectedLanguage: language })),
+
+  endGame: () => set(() => ({
     score: 0,
     isPlaying: false,
     currentRound: 1,
-    totalRounds: 5,
-    imageUrl: null,
-    roundDistance: null,
+    currentCodeSnippet: null,
+    correctLanguage: null,
+    languageOptions: [],
+    selectedLanguage: null,
     roundScore: 0,
-    isGameOver: false,
-
-    setStartGame: (target: number[], imageUrl: string) => {
-        set({
-            isPlaying: true,
-            currentRound: 1,
-            score: 0,
-            isGameOver: false,
-            target,
-            imageUrl,
-            selected: null,
-            roundDistance: null,
-            roundScore: 0,
-        });
-    },
-
-    setGuessResult: (point: number[], distance: number, roundScore: number) => {
-        set((state) => ({
-            selected: point,
-            roundDistance: distance,
-            roundScore: roundScore,
-            score: state.score + roundScore,
-        }));
-    },
-
-    setNextRound: (target: number[], imageUrl: string) => {
-        set((state) => ({
-            currentRound: state.currentRound + 1,
-            target,
-            imageUrl,
-            selected: null,
-            roundDistance: null,
-            roundScore: 0,
-        }));
-    },
-
-    setGameOver: () => {
-        set({ isGameOver: true, isPlaying: false });
-    },
-
-    select: (point) => set(()=>({selected: point})),
-    
-    endGame: () => set(() => ({level:0, score:0, selected:[], target:[], isPlaying: false })),
-})
+    isGameOver: false
+  })),
+});
