@@ -31,7 +31,7 @@ function HomeComponent() {
           <Code2 className="w-10 h-10 text-white" strokeWidth={3} />
         </div>
 
-        <h1 className="text-6xl md:text-7xl font-black mb-4 tracking-tighter text-slate-900">
+        <h1 className="text-6xl md:text-7xl font-black mb-4 tracking-tighter text-slate-900 cursor-pointer">
           Spot the <span className="text-emerald-500 underline decoration-4 decoration-black underline-offset-4">Syntax</span>
         </h1>
 
@@ -40,7 +40,7 @@ function HomeComponent() {
           Can you guess the programming language from a single snippet?
         </p>
 
-        <Button onClick={handleStart} className="text-xl py-6 px-12 w-full md:w-auto h-auto border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all bg-slate-900 text-white hover:bg-slate-800">
+        <Button onClick={handleStart} className="text-xl py-6 px-12 w-full md:w-auto h-auto border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all bg-slate-900 text-white hover:bg-slate-800 cursor-pointer">
           Start Guessing <ArrowRight className="w-6 h-6 ml-2" strokeWidth={3} />
         </Button>
 

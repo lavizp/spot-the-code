@@ -12,10 +12,7 @@ export const useGameStore = create<GameStore>()(
         ...createGameSlice(...a)
       })),
       {
-        name: 'app-storage',
-        partialize: (state) => ({
-          
-        })
+        name: 'spot-the-spot',
       }
     )
   )
