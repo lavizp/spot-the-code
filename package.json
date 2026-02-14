@@ -1,5 +1,5 @@
 {
-  "name": "spot-the-spot",
+  "name": "spot-the-code",
   "private": true,
   "workspaces": {
     "packages": [
@@ -23,13 +23,13 @@
   },
   "packageManager": "bun@1.3.3",
   "dependencies": {
-    "@spot-the-spot/env": "workspace:*",
+    "@spot-the-code/env": "workspace:*",
     "dotenv": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "typescript": "catalog:",
     "@types/node": "catalog:",
-    "@spot-the-spot/config": "workspace:*"
+    "@spot-the-code/config": "workspace:*"
   }
 }

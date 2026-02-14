@@ -12,7 +12,7 @@ export const useGameStore = create<GameStore>()(
         ...createGameSlice(...a)
       })),
       {
-        name: 'spot-the-spot',
+        name: 'spot-the-code',
       }
     )
   )

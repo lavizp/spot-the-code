@@ -3,14 +3,14 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "spot-the-spot",
+      "name": "spot-the-code",
       "dependencies": {
-        "@spot-the-spot/env": "workspace:*",
+        "@spot-the-code/env": "workspace:*",
         "dotenv": "catalog:",
         "zod": "catalog:",
       },
       "devDependencies": {
-        "@spot-the-spot/config": "workspace:*",
+        "@spot-the-code/config": "workspace:*",
         "@types/node": "catalog:",
         "typescript": "catalog:",
       },
@@ -26,7 +26,7 @@
       "name": "web",
       "dependencies": {
         "@base-ui/react": "^1.0.0",
-        "@spot-the-spot/env": "workspace:*",
+        "@spot-the-code/env": "workspace:*",
         "@tailwindcss/vite": "^4.1.8",
         "@tanstack/react-form": "^1.23.5",
         "@tanstack/react-query": "^5.90.12",
@@ -56,7 +56,7 @@
         "zustand": "^5.0.10",
       },
       "devDependencies": {
-        "@spot-the-spot/config": "workspace:*",
+        "@spot-the-code/config": "workspace:*",
         "@tanstack/react-query-devtools": "^5.91.1",
         "@tanstack/react-router-devtools": "^1.141.1",
         "@testing-library/dom": "^10.4.0",
@@ -71,11 +71,11 @@
       },
     },
     "packages/config": {
-      "name": "@spot-the-spot/config",
+      "name": "@spot-the-code/config",
       "version": "0.0.0",
     },
     "packages/env": {
-      "name": "@spot-the-spot/env",
+      "name": "@spot-the-code/env",
       "version": "0.0.0",
       "dependencies": {
         "@t3-oss/env-core": "^0.13.1",
@@ -83,7 +83,7 @@
         "zod": "catalog:",
       },
       "devDependencies": {
-        "@spot-the-spot/config": "workspace:*",
+        "@spot-the-code/config": "workspace:*",
         "@types/node": "catalog:",
         "typescript": "catalog:",
       },
@@ -348,9 +348,9 @@
 
     "@sindresorhus/merge-streams": ["@sindresorhus/merge-streams@4.0.0", "", {}, "sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ=="],
 
-    "@spot-the-spot/config": ["@spot-the-spot/config@workspace:packages/config"],
+    "@spot-the-code/config": ["@spot-the-code/config@workspace:packages/config"],
 
-    "@spot-the-spot/env": ["@spot-the-spot/env@workspace:packages/env"],
+    "@spot-the-code/env": ["@spot-the-code/env@workspace:packages/env"],
 
     "@t3-oss/env-core": ["@t3-oss/env-core@0.13.10", "", { "peerDependencies": { "arktype": "^2.1.0", "typescript": ">=5.0.0", "valibot": "^1.0.0-beta.7 || ^1.0.0", "zod": "^3.24.0 || ^4.0.0" }, "optionalPeers": ["arktype", "typescript", "valibot", "zod"] }, "sha512-NNFfdlJ+HmPHkLi2HKy7nwuat9SIYOxei9K10lO2YlcSObDILY7mHZNSHsieIM3A0/5OOzw/P/b+yLvPdaG52g=="],
 
