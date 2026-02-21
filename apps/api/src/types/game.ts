@@ -1,7 +1,9 @@
 export interface GameRoom {
-    id: string;
-    players: Set<string>;
-    data: any;
+  id: string;
+  data: GameStates;
+  rounds: RoundStates[]
+  currentTimer?: NodeJS.Timeout
+  answeredPlayers: Set<string>
 }
 
 export interface PlayerState{

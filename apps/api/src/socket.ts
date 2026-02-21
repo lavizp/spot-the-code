@@ -8,7 +8,7 @@ export const configureSocket = (io: Server) => {
         console.log(`User Connected: ${socket.id}`);
 
         socket.on('create_game', (gameId: string) => {
-            const result = gameController.createGame(gameId);
+            const result = gameController.createGame();
             
             if (result.success) {
                 socket.join(gameId);

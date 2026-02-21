@@ -1,4 +1,5 @@
 import type { GameRoom } from "../types/game";
+import { createGameId } from "../utils/game";
 
 
 export class GameController {
@@ -7,22 +8,28 @@ export class GameController {
     constructor() {
         this.games = new Map();
     }
-
-    createGame(gameId: string): { success: boolean; message?: string } {
+    createGame(): { success: boolean; message?: string } {
+      const gameId = createGameId()
         if (this.games.has(gameId)) {
             return { success: false, message: 'Game already exists' };
         }
 
         this.games.set(gameId, {
             id: gameId,
-            players: new Set(),
-            data: {},
+          data: {
+            players: [],
+            round:0
+          },
+          answeredPlayers: new Set(),
+          //TODO: Add round data when game starts
+          rounds: []
         });
 
         console.log(`Game created: ${gameId}`);
         return { success: true };
     }
 
+//TODO: Check if player is already joined in a game before processing next join
     joinGame(gameId: string, playerId: string): { success: boolean; message?: string } {
         const game = this.games.get(gameId);
         if (!game) {
