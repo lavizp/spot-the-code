@@ -1,0 +1,54 @@
+import type { GameRoom } from "../types/game";
+
+
+export class GameController {
+    private games: Map<string, GameRoom>;
+
+    constructor() {
+        this.games = new Map();
+    }
+
+    createGame(gameId: string): { success: boolean; message?: string } {
+        if (this.games.has(gameId)) {
+            return { success: false, message: 'Game already exists' };
+        }
+
+        this.games.set(gameId, {
+            id: gameId,
+            players: new Set(),
+            data: {},
+        });
+
+        console.log(`Game created: ${gameId}`);
+        return { success: true };
+    }
+
+    joinGame(gameId: string, playerId: string): { success: boolean; message?: string } {
+        const game = this.games.get(gameId);
+        if (!game) {
+            return { success: false, message: 'Game not found' };
+        }
+
+        game.players.add(playerId);
+        console.log(`Player ${playerId} joined game ${gameId}`);
+        return { success: true };
+    }
+
+    handleAction(gameId: string, playerId: string, action: any): any {
+        const game = this.games.get(gameId);
+        if (!game) return null;
+
+        // --- ACTUAL GAME LOGIC HERE ---
+        // Example: Update game.data based on the action
+        // game.data.score += action.points;
+        
+        console.log(`Action in ${gameId} by ${playerId}:`, action);
+        
+        // Return the new state or the action to be broadcasted
+        return {
+            player: playerId,
+            action,
+            // gameState: game.data // Optionally send updated state
+        };
+    }
+}
