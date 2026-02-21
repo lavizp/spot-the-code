@@ -9,7 +9,7 @@ export interface GameRoom {
 export interface PlayerState{
   id: string
   name: string
-  points: string
+  points: number
 }
 
 export interface GameStates{

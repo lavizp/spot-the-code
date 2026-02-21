@@ -36,7 +36,7 @@ export class GameController {
             return { success: false, message: 'Game not found' };
         }
 
-        game.players.add(playerId);
+        game.data = {...game.data, players:[...game.data.players, {id:playerId, name:'asd', points:0}]}
         console.log(`Player ${playerId} joined game ${gameId}`);
         return { success: true };
     }
