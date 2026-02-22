@@ -4,6 +4,7 @@ export interface GameRoom {
   rounds: RoundStates[]
   currentTimer?: NodeJS.Timeout
   answeredPlayers: Set<string>
+  currentRound: number
 }
 
 export interface PlayerState{
@@ -18,6 +19,6 @@ export interface GameStates{
 }
 
 export interface RoundStates{
-  snippet: string
+  snippet: string[]
   correctAnswer: string
 }

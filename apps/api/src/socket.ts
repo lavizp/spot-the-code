@@ -31,7 +31,7 @@ export const configureSocket = (io: Server) => {
 
         socket.on('game_action', ({ gameId, action }) => {
             // Let controller process logic
-            const broadcastData = gameController.handleAction(gameId, socket.id, action);
+            const broadcastData = gameController.handleAction(gameId, socket.id, action, io);
             
             if (broadcastData) {
                 io.to(gameId).emit('action_broadcasted', broadcastData);

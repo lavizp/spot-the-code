@@ -1,4 +1,4 @@
-import { CODE_SNIPPETS } from "./codes"
+import { CODE_SNIPPETS } from "../data/codes";
 
 export function getLanguagesList():Array<string> {
   return Object.keys(CODE_SNIPPETS).map(key =>
@@ -17,4 +17,16 @@ export function getRandomQuestion() {
     value: CODE_SNIPPETS[randomKey as keyof typeof CODE_SNIPPETS]
   };
   return randomEntry
+}
+
+export function getFiveUniqueQuestions() {
+  const keys = Object.keys(CODE_SNIPPETS);
+  
+  return keys
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 5)
+    .map(key => ({
+      key,
+      value: CODE_SNIPPETS[key as keyof typeof CODE_SNIPPETS]
+    }));
 }
