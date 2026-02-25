@@ -19,6 +19,6 @@ export interface GameStates{
 }
 
 export interface RoundStates{
-  snippet: string[]
+  snippet: string
   correctAnswer: string
 }
