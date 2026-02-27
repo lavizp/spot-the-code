@@ -1,5 +1,5 @@
-import { useGameStore } from "@/store";
 import { CODE_SNIPPETS } from "@/data/codes";
+import { useGameStore } from "@/store";
 
 const LANGUAGES = Object.keys(CODE_SNIPPETS);
 

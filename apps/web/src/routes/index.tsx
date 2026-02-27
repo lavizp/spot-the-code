@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { gameActions } from "@/store/actions/gameActions";
-import { ArrowRight, Code2 } from "lucide-react";
+import { ArrowRight, Code2, Users } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
@@ -15,6 +15,12 @@ function HomeComponent() {
     navigate({
       to: '/match/round/$roundid',
       params: { roundid: '1' }
+    });
+  };
+
+  const handleMultiplayer = () => {
+    navigate({
+      to: '/multiplayer'
     });
   };
 
@@ -40,9 +46,15 @@ function HomeComponent() {
           Can you guess the programming language from a single snippet?
         </p>
 
-        <Button onClick={handleStart} className="text-xl py-6 px-12 w-full md:w-auto h-auto border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all bg-slate-900 text-white hover:bg-slate-800 cursor-pointer">
-          Start Guessing <ArrowRight className="w-6 h-6 ml-2" strokeWidth={3} />
-        </Button>
+        <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
+          <Button onClick={handleStart} className="text-xl py-6 px-12 w-full md:w-auto h-auto border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all bg-slate-900 text-white hover:bg-slate-800 cursor-pointer">
+            Start Guessing <ArrowRight className="w-6 h-6 ml-2" strokeWidth={3} />
+          </Button>
+
+          <Button onClick={handleMultiplayer} className="text-xl py-6 px-12 w-full md:w-auto h-auto border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all bg-white text-slate-900 hover:bg-slate-50 cursor-pointer">
+            Multiplayer <Users className="w-6 h-6 ml-2" strokeWidth={3} />
+          </Button>
+        </div>
 
         <div className="mt-8 flex justify-center gap-4 text-sm font-bold text-slate-400 uppercase tracking-widest">
           <span>★ 5 Rounds</span>

@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResultRouteImport } from './routes/result'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MultiplayerIndexRouteImport } from './routes/multiplayer/index'
+import { Route as MultiplayerRoomIdRouteImport } from './routes/multiplayer/$roomId'
 import { Route as MatchRoundRoundidIndexRouteImport } from './routes/match/round/$roundid/index'
 
 const ResultRoute = ResultRouteImport.update({
@@ -23,6 +25,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MultiplayerIndexRoute = MultiplayerIndexRouteImport.update({
+  id: '/multiplayer/',
+  path: '/multiplayer/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MultiplayerRoomIdRoute = MultiplayerRoomIdRouteImport.update({
+  id: '/multiplayer/$roomId',
+  path: '/multiplayer/$roomId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MatchRoundRoundidIndexRoute = MatchRoundRoundidIndexRouteImport.update({
   id: '/match/round/$roundid/',
   path: '/match/round/$roundid/',
@@ -32,30 +44,54 @@ const MatchRoundRoundidIndexRoute = MatchRoundRoundidIndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/result': typeof ResultRoute
+  '/multiplayer/$roomId': typeof MultiplayerRoomIdRoute
+  '/multiplayer': typeof MultiplayerIndexRoute
   '/match/round/$roundid': typeof MatchRoundRoundidIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/result': typeof ResultRoute
+  '/multiplayer/$roomId': typeof MultiplayerRoomIdRoute
+  '/multiplayer': typeof MultiplayerIndexRoute
   '/match/round/$roundid': typeof MatchRoundRoundidIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/result': typeof ResultRoute
+  '/multiplayer/$roomId': typeof MultiplayerRoomIdRoute
+  '/multiplayer/': typeof MultiplayerIndexRoute
   '/match/round/$roundid/': typeof MatchRoundRoundidIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/result' | '/match/round/$roundid'
+  fullPaths:
+    | '/'
+    | '/result'
+    | '/multiplayer/$roomId'
+    | '/multiplayer'
+    | '/match/round/$roundid'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/result' | '/match/round/$roundid'
-  id: '__root__' | '/' | '/result' | '/match/round/$roundid/'
+  to:
+    | '/'
+    | '/result'
+    | '/multiplayer/$roomId'
+    | '/multiplayer'
+    | '/match/round/$roundid'
+  id:
+    | '__root__'
+    | '/'
+    | '/result'
+    | '/multiplayer/$roomId'
+    | '/multiplayer/'
+    | '/match/round/$roundid/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ResultRoute: typeof ResultRoute
+  MultiplayerRoomIdRoute: typeof MultiplayerRoomIdRoute
+  MultiplayerIndexRoute: typeof MultiplayerIndexRoute
   MatchRoundRoundidIndexRoute: typeof MatchRoundRoundidIndexRoute
 }
 
@@ -75,6 +111,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/multiplayer/': {
+      id: '/multiplayer/'
+      path: '/multiplayer'
+      fullPath: '/multiplayer'
+      preLoaderRoute: typeof MultiplayerIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/multiplayer/$roomId': {
+      id: '/multiplayer/$roomId'
+      path: '/multiplayer/$roomId'
+      fullPath: '/multiplayer/$roomId'
+      preLoaderRoute: typeof MultiplayerRoomIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/match/round/$roundid/': {
       id: '/match/round/$roundid/'
       path: '/match/round/$roundid'
@@ -88,6 +138,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ResultRoute: ResultRoute,
+  MultiplayerRoomIdRoute: MultiplayerRoomIdRoute,
+  MultiplayerIndexRoute: MultiplayerIndexRoute,
   MatchRoundRoundidIndexRoute: MatchRoundRoundidIndexRoute,
 }
 export const routeTree = rootRouteImport
