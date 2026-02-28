@@ -2,7 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Users, Plus, Hash, ArrowLeft } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { socketService } from "@/lib/socket";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/multiplayer/")({
   component: MultiplayerHome,
@@ -11,16 +13,44 @@ export const Route = createFileRoute("/multiplayer/")({
 function MultiplayerHome() {
   const navigate = useNavigate();
   const [roomCode, setRoomCode] = useState("");
+  const [playerName, setPlayerName] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+
+  useEffect(() => {
+    const socket = socketService.connect();
+
+    socket.on("game_created", (data: { gameId: string; success: boolean; message?: string }) => {
+      setIsCreating(false);
+      if (data.success) {
+        navigate({ to: '/multiplayer/$roomId', params: { roomId: data.gameId } });
+      } else {
+        toast.error(data.message || "Failed to create room");
+      }
+    });
+
+    return () => {
+      socket.off("game_created");
+    };
+  }, [navigate]);
 
   const handleCreateRoom = () => {
-    // In a real app, this would involve a backend call/socket connection
-    const generatedRoomId = Math.random().toString(36).substring(2, 8).toUpperCase();
-    navigate({ to: '/multiplayer/$roomId', params: { roomId: generatedRoomId } });
+    if (!playerName.trim()) {
+      toast.error("Please enter your name first");
+      return;
+    }
+    localStorage.setItem("playerName", playerName);
+    setIsCreating(true);
+    socketService.emit("create_game");
   };
 
   const handleJoinRoom = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!playerName.trim()) {
+      toast.error("Please enter your name first");
+      return;
+    }
     if (roomCode.trim()) {
+      localStorage.setItem("playerName", playerName);
       navigate({ to: '/multiplayer/$roomId', params: { roomId: roomCode } });
     }
   };
@@ -50,15 +80,27 @@ function MultiplayerHome() {
         </div>
 
         <div className="space-y-8">
+          {/* Name Section */}
+          <div className="space-y-4">
+            <h2 className="text-sm font-black uppercase tracking-widest text-slate-400">Your Identity</h2>
+            <Input 
+              placeholder="ENTER YOUR NAME" 
+              value={playerName}
+              onChange={(e) => setPlayerName(e.target.value)}
+              className="h-16 text-lg font-bold border-2 border-black rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-indigo-500 transition-colors uppercase placeholder:normal-case"
+            />
+          </div>
+
           {/* Create Section */}
           <div className="space-y-4">
             <h2 className="text-sm font-black uppercase tracking-widest text-slate-400">Host a Game</h2>
             <Button 
               onClick={handleCreateRoom}
-              className="w-full h-16 text-lg font-bold border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all bg-emerald-400 text-slate-900 hover:bg-emerald-300"
+              disabled={isCreating}
+              className="w-full h-16 text-lg font-bold border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all bg-emerald-400 text-slate-900 hover:bg-emerald-300 disabled:opacity-50"
             >
               <Plus className="w-6 h-6 mr-2" strokeWidth={3} />
-              Create New Room
+              {isCreating ? "Creating..." : "Create New Room"}
             </Button>
           </div>
 

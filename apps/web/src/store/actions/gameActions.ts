@@ -1,5 +1,6 @@
 import { CODE_SNIPPETS } from "@/data/codes";
 import { useGameStore } from "@/store";
+import { socketService } from "@/lib/socket";
 
 const LANGUAGES = Object.keys(CODE_SNIPPETS);
 
@@ -18,12 +19,22 @@ export const gameActions = {
   },
 
   submitGuess: (selectedLanguage: string) => {
-    const { correctLanguage } = useGameStore.getState();
+    const { correctLanguage, gameId } = useGameStore.getState();
     
     const isCorrect = selectedLanguage === correctLanguage;
     const roundScore = isCorrect ? 1000 : 0;
 
     useGameStore.getState().setGuessResult(selectedLanguage, roundScore);
+
+    if (gameId) {
+      socketService.emit("game_action", {
+        gameId,
+        action: {
+          type: "choose_answer",
+          answer: selectedLanguage,
+        },
+      });
+    }
   },
 
   nextRound: () => {

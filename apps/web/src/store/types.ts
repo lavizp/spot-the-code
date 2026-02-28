@@ -5,6 +5,7 @@ export type GameState = {
   currentRound: number
   totalRounds: number
   isGameOver: boolean
+  gameId: string | null
   
   // Round State
   currentCodeSnippet: string | null
@@ -15,9 +16,9 @@ export type GameState = {
 }
 
 export type GameActions = {
-  setStartGame: (snippet: string, language: string, options: string[]) => void
+  setStartGame: (snippet: string, language: string, options: string[], gameId?: string, round?: number) => void
   setGuessResult: (selected: string, roundScore: number) => void
-  setNextRound: (snippet: string, language: string, options: string[]) => void
+  setNextRound: (snippet: string, language: string, options: string[], round?: number) => void
   setGameOver: () => void
   select: (language: string) => void
   endGame: () => void

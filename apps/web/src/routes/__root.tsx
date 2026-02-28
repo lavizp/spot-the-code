@@ -2,6 +2,7 @@ import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanst
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import "leaflet/dist/leaflet.css"
 import { Toaster } from "@/components/ui/sonner";
+import { SocketGameHandler } from "@/components/SocketGameHandler";
 
 import appCss from "../index.css?url";
 
@@ -42,6 +43,7 @@ function RootDocument() {
         <div className="grid h-svh grid-rows-[auto_1fr]">
           <Outlet />
         </div>
+        <SocketGameHandler />
         <Toaster richColors />
         <TanStackRouterDevtools position="bottom-left" />
         <Scripts />

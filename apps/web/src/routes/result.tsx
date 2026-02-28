@@ -19,14 +19,15 @@ function RouteComponent() {
     totalRounds, 
     isPlaying,
     selectedLanguage,
-    correctLanguage
+    correctLanguage,
+    gameId
   } = useGameStore();
 
   const isLastRound = currentRound >= totalRounds;
   const isCorrect = selectedLanguage === correctLanguage;
 
   const handleNext = () => {
-     if (isLastRound) {
+     if (isLastRound || gameId) {
         useGameStore.getState().endGame();
         navigate({ to: '/' });
      } else {
@@ -121,7 +122,7 @@ function RouteComponent() {
                         onClick={handleNext} 
                         className="w-full md:w-auto text-lg px-8 py-6 h-auto whitespace-nowrap border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all bg-yellow-400 hover:bg-yellow-500 text-black font-black"
                    >
-                      {isLastRound ? (
+                      {(isLastRound || gameId) ? (
                         <span className="flex items-center">FINISH GAME <RefreshCcw className="w-6 h-6 ml-2" strokeWidth={3} /></span>
                       ) : (
                         <span className="flex items-center">NEXT ROUND <ArrowRight className="w-6 h-6 ml-2" strokeWidth={3} /></span>

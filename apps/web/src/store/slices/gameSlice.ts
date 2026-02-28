@@ -13,6 +13,7 @@ export const createGameSlice: StateCreator<
   currentRound: 1,
   totalRounds: 5,
   isGameOver: false,
+  gameId: null,
   
   // Round State
   currentCodeSnippet: null,
@@ -21,12 +22,13 @@ export const createGameSlice: StateCreator<
   selectedLanguage: null,
   roundScore: 0,
 
-  setStartGame: (snippet: string, language: string, options: string[]) => {
+  setStartGame: (snippet: string, language: string, options: string[], gameId?: string, round?: number) => {
     set({
       isPlaying: true,
-      currentRound: 1,
+      currentRound: round || 1,
       score: 0,
       isGameOver: false,
+      gameId: gameId || null,
       currentCodeSnippet: snippet,
       correctLanguage: language,
       languageOptions: options,
@@ -43,9 +45,9 @@ export const createGameSlice: StateCreator<
     }));
   },
 
-  setNextRound: (snippet: string, language: string, options: string[]) => {
+  setNextRound: (snippet: string, language: string, options: string[], round?: number) => {
     set((state) => ({
-      currentRound: state.currentRound + 1,
+      currentRound: round || state.currentRound + 1,
       currentCodeSnippet: snippet,
       correctLanguage: language,
       languageOptions: options,
@@ -69,6 +71,7 @@ export const createGameSlice: StateCreator<
     languageOptions: [],
     selectedLanguage: null,
     roundScore: 0,
-    isGameOver: false
+    isGameOver: false,
+    gameId: null
   })),
 });

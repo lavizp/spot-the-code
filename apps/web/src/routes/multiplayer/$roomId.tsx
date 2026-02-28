@@ -3,6 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Users, Copy, Play, ArrowLeft, Loader2, ShieldCheck } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { socketService } from "@/lib/socket";
+import { useGameStore } from "@/store";
+import { CODE_SNIPPETS } from "@/data/codes";
+
+const LANGUAGES = Object.keys(CODE_SNIPPETS);
 
 export const Route = createFileRoute("/multiplayer/$roomId")({
   component: MultiplayerRoom,
@@ -12,23 +17,47 @@ function MultiplayerRoom() {
   const { roomId } = useParams({ from: "/multiplayer/$roomId" });
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  
-  // Mock data for players - in a real app, this would come from a socket/state
-  const [players] = useState([
-    { id: "1", name: "You (Host)", isHost: true, status: "ready" },
-    { id: "2", name: "Player 2", isHost: false, status: "waiting" },
-    { id: "3", name: "Player 3", isHost: false, status: "ready" },
-  ]);
+  const [players, setPlayers] = useState<{ id: string; name: string; isHost?: boolean }[]>([]);
 
   useEffect(() => {
-    // Simulate loading room data
-    const timer = setTimeout(() => setIsLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, [roomId]);
+    const socket = socketService.connect();
+    const savedName = localStorage.getItem("playerName");
+    const playerName = savedName || `Player_${Math.floor(Math.random() * 1000)}`;
+
+    socket.emit("join_game", { gameId: roomId, playerName });
+
+    socket.on("room_state", (data: { players: any[] }) => {
+      // Map players to include isHost logic if not provided by backend
+      // Assuming the first player in the list is the host
+      const mappedPlayers = data.players.map((p, index) => ({
+        ...p,
+        isHost: index === 0
+      }));
+      setPlayers(mappedPlayers);
+      setIsLoading(false);
+    });
+
+    socket.on("player_joined", (data: { playerId: string; playerName: string }) => {
+      setPlayers((prev) => {
+        if (prev.find((p) => p.id === data.playerId)) return prev;
+        return [...prev, { id: data.playerId, name: data.playerName, isHost: prev.length === 0 }];
+      });
+      toast.info(`${data.playerName} joined the room`);
+    });
+
+    return () => {
+      socket.off("room_state");
+      socket.off("player_joined");
+    };
+  }, [roomId, navigate]);
 
   const copyRoomCode = () => {
     navigator.clipboard.writeText(roomId);
     toast.success("Room code copied to clipboard!");
+  };
+
+  const handleStartGame = () => {
+    socketService.emit("start_game", roomId);
   };
 
   if (isLoading) {
@@ -95,10 +124,8 @@ function MultiplayerRoom() {
                 <div>
                   <div className="font-bold flex items-center gap-1">
                     {player.name}
+                    {player.id === socketService.socket?.id && " (You)"}
                     {player.isHost && <ShieldCheck className="w-4 h-4 text-indigo-500" />}
-                  </div>
-                  <div className={`text-[10px] font-black uppercase tracking-widest ${player.status === 'ready' ? 'text-emerald-500' : 'text-amber-500'}`}>
-                    {player.status}
                   </div>
                 </div>
               </div>
@@ -119,23 +146,24 @@ function MultiplayerRoom() {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4">
-          <Button 
-            className="flex-1 h-16 text-xl font-black border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all bg-emerald-400 text-slate-900 hover:bg-emerald-300"
-            disabled={players.length < 2}
-          >
-            <Play className="w-6 h-6 mr-2" fill="currentColor" />
-            START GAME
-          </Button>
-          <Button 
-            variant="outline"
-            className="h-16 px-8 text-lg font-bold border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all bg-white text-slate-900 hover:bg-slate-50"
-          >
-            I'M READY
-          </Button>
+          {players.find(p => p.id === socketService.socket?.id)?.isHost ? (
+            <Button 
+              onClick={handleStartGame}
+              className="flex-1 h-16 text-xl font-black border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all bg-emerald-400 text-slate-900 hover:bg-emerald-300"
+              disabled={players.length < 2}
+            >
+              <Play className="w-6 h-6 mr-2" fill="currentColor" />
+              START GAME
+            </Button>
+          ) : (
+            <div className="flex-1 h-16 flex items-center justify-center border-4 border-dashed border-slate-200 rounded-xl bg-slate-50 text-slate-400 font-bold uppercase tracking-widest">
+              Waiting for host to start...
+            </div>
+          )}
         </div>
 
         <p className="mt-6 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">
-          The host will start the match once everyone is ready
+          The host will start the match once everyone has joined
         </p>
       </div>
     </div>
