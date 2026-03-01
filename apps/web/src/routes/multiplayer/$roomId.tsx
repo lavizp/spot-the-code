@@ -5,9 +5,6 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { socketService } from "@/lib/socket";
 import { useGameStore } from "@/store";
-import { CODE_SNIPPETS } from "@/data/codes";
-
-const LANGUAGES = Object.keys(CODE_SNIPPETS);
 
 export const Route = createFileRoute("/multiplayer/$roomId")({
   component: MultiplayerRoom,
@@ -20,6 +17,9 @@ function MultiplayerRoom() {
   const [players, setPlayers] = useState<{ id: string; name: string; isHost?: boolean }[]>([]);
 
   useEffect(() => {
+    const { setGameId } = useGameStore.getState();
+    setGameId(roomId);
+
     const socket = socketService.connect();
     const savedName = localStorage.getItem("playerName");
     const playerName = savedName || `Player_${Math.floor(Math.random() * 1000)}`;

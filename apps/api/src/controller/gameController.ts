@@ -32,7 +32,7 @@ export class GameController {
     }
 
     joinGame(gameId: string, playerId: string, playerName: string): { success: boolean; message?: string; players?: any[] } {
-        const game = this.games.get(gameId);
+        const game = this.games.get(gameId.toUpperCase());
         if (!game) {
             return { success: false, message: 'Game not found' };
         }
@@ -53,7 +53,7 @@ export class GameController {
     }
 
     startGame(gameId: string, io: Server): { success: boolean; message?: string } {
-        const game = this.games.get(gameId);
+        const game = this.games.get(gameId.toUpperCase());
         if (!game) {
             return { success: false, message: 'Game not found' };
         }
@@ -96,7 +96,7 @@ export class GameController {
     }
 
     handleAction(gameId: string, playerId: string, action: any, io: Server): any {
-        const game = this.games.get(gameId);
+        const game = this.games.get(gameId.toUpperCase());
         if (!game) return null;
 
         if (action.type === 'choose_answer') {

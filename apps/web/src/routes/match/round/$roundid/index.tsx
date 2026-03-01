@@ -1,7 +1,7 @@
 import SelectPannel from '@/components/match/selectPannel';
 import { useGameStore } from '@/store';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import vscDarkPlus from 'react-syntax-highlighter/dist/esm/styles/prism/vsc-dark-plus';
 
@@ -16,7 +16,28 @@ export function Match() {
     currentCodeSnippet,
     correctLanguage,
     isPlaying,
+    roundEndTime,
   } = useGameStore();
+
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!roundEndTime) {
+      setTimeLeft(null);
+      return;
+    }
+
+    const updateTimer = () => {
+      const now = Date.now();
+      const remaining = Math.max(0, Math.ceil((roundEndTime - now) / 1000));
+      setTimeLeft(remaining);
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 500);
+
+    return () => clearInterval(interval);
+  }, [roundEndTime]);
 
   useEffect(() => {
     if (!isPlaying) {
@@ -32,6 +53,12 @@ export function Match() {
         <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-4 py-2 rounded-xl font-black text-xl flex items-center gap-2 pointer-events-auto text-black">
           <span className="text-emerald-500">Round</span> {currentRound}
         </div>
+
+        {timeLeft !== null && (
+          <div className={`bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-6 py-2 rounded-xl font-black text-2xl flex items-center pointer-events-auto transition-colors ${timeLeft <= 5 ? 'text-red-500 animate-pulse' : 'text-black'}`}>
+            {timeLeft}s
+          </div>
+        )}
       </div>
 
       <div className="flex-1 flex flex-col md:flex-row h-full pt-20 pb-4 px-4 gap-4 overflow-hidden">

@@ -14,6 +14,8 @@ export const createGameSlice: StateCreator<
   totalRounds: 5,
   isGameOver: false,
   gameId: null,
+  roundEndTime: null,
+  finalScores: null,
   
   // Round State
   currentCodeSnippet: null,
@@ -22,19 +24,24 @@ export const createGameSlice: StateCreator<
   selectedLanguage: null,
   roundScore: 0,
 
-  setStartGame: (snippet: string, language: string, options: string[], gameId?: string, round?: number) => {
+  setStartGame: (snippet: string, language: string, options: string[], gameId?: string, round?: number, roundEndTime?: number) => {
     set({
       isPlaying: true,
       currentRound: round || 1,
       score: 0,
       isGameOver: false,
       gameId: gameId || null,
+      roundEndTime: roundEndTime || null,
       currentCodeSnippet: snippet,
       correctLanguage: language,
       languageOptions: options,
       selectedLanguage: null,
       roundScore: 0,
     });
+  },
+
+  setGameId: (gameId: string | null) => {
+    set({ gameId });
   },
 
   setGuessResult: (selected: string, roundScore: number) => {
@@ -45,9 +52,10 @@ export const createGameSlice: StateCreator<
     }));
   },
 
-  setNextRound: (snippet: string, language: string, options: string[], round?: number) => {
+  setNextRound: (snippet: string, language: string, options: string[], round?: number, roundEndTime?: number) => {
     set((state) => ({
       currentRound: round || state.currentRound + 1,
+      roundEndTime: roundEndTime || null,
       currentCodeSnippet: snippet,
       correctLanguage: language,
       languageOptions: options,
@@ -56,8 +64,8 @@ export const createGameSlice: StateCreator<
     }));
   },
 
-  setGameOver: () => {
-    set({ isGameOver: true, isPlaying: false });
+  setGameOver: (scores) => {
+    set({ isGameOver: true, isPlaying: false, finalScores: scores || null });
   },
 
   select: (language: string) => set(() => ({ selectedLanguage: language })),
@@ -72,6 +80,8 @@ export const createGameSlice: StateCreator<
     selectedLanguage: null,
     roundScore: 0,
     isGameOver: false,
-    gameId: null
+    gameId: null,
+    roundEndTime: null,
+    finalScores: null
   })),
 });

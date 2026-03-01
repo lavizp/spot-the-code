@@ -13,7 +13,7 @@ export const Route = createFileRoute("/multiplayer/")({
 function MultiplayerHome() {
   const navigate = useNavigate();
   const [roomCode, setRoomCode] = useState("");
-  const [playerName, setPlayerName] = useState("");
+  const [playerName, setPlayerName] = useState(() => localStorage.getItem("playerName") || "");
   const [isCreating, setIsCreating] = useState(false);
 
   useEffect(() => {
@@ -126,7 +126,7 @@ function MultiplayerHome() {
             </div>
             <Button 
               type="submit"
-              disabled={!roomCode.trim()}
+              disabled={!roomCode.trim() || !playerName.trim()}
               className="w-full h-16 text-lg font-bold border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Join Room

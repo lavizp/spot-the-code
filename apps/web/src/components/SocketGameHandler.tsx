@@ -9,22 +9,27 @@ const LANGUAGES = Object.keys(CODE_SNIPPETS);
 
 export function SocketGameHandler() {
   const navigate = useNavigate();
-  const { setStartGame, setNextRound, setGameOver, gameId, currentRound } = useGameStore();
+  const { setStartGame, setNextRound, setGameOver } = useGameStore();
 
   useEffect(() => {
     const socket = socketService.connect();
 
     socket.on("round_start", (data: { round: number; roundData: { snippet: string; correctAnswer: string }; expiresIn: number }) => {
       console.log("Round starting:", data.round);
+      const roundEndTime = Date.now() + data.expiresIn;
       
       // If it's the first round, initialize the game state
       if (data.round === 1) {
+        // Get the latest gameId from store state to avoid using a stale captured value
+        const currentGameId = useGameStore.getState().gameId;
+        
         setStartGame(
           data.roundData.snippet,
           data.roundData.correctAnswer,
           LANGUAGES,
-          gameId || undefined,
-          data.round
+          currentGameId || undefined,
+          data.round,
+          roundEndTime
         );
       } else {
         // For subsequent rounds, update the round data
@@ -32,7 +37,8 @@ export function SocketGameHandler() {
           data.roundData.snippet,
           data.roundData.correctAnswer,
           LANGUAGES,
-          data.round
+          data.round,
+          roundEndTime
         );
       }
 
@@ -44,7 +50,7 @@ export function SocketGameHandler() {
 
     socket.on("game_over", (data: { finalScores: any[] }) => {
       console.log("Game Over:", data.finalScores);
-      setGameOver();
+      setGameOver(data.finalScores);
       toast.info("Game Over! Check out the final scores.");
       navigate({ to: "/result" });
     });
@@ -67,7 +73,7 @@ export function SocketGameHandler() {
       socket.off("action_broadcasted");
       socket.off("error");
     };
-  }, [navigate, setStartGame, setNextRound, setGameOver, gameId]);
+  }, [navigate, setStartGame, setNextRound, setGameOver]);
 
   return null;
 }
