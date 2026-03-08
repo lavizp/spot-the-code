@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.json", // Adjust path based on your folder depth
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
