@@ -51,7 +51,7 @@ function MultiplayerHome() {
     }
     if (roomCode.trim()) {
       localStorage.setItem("playerName", playerName);
-      navigate({ to: '/multiplayer/$roomId', params: { roomId: roomCode } });
+      navigate({ to: '/multiplayer/$roomId', params: { roomId: roomCode.trim() } });
     }
   };
 

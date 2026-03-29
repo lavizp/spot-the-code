@@ -20,10 +20,11 @@ export const configureSocket = (io: Server) => {
         });
 
         socket.on('join_game', ({ gameId, playerName }: { gameId: string; playerName: string }) => {
-            const result = gameController.joinGame(gameId, socket.id, playerName);
+            const normalizedGameId = gameId.toUpperCase();
+            const result = gameController.joinGame(normalizedGameId, socket.id, playerName);
             
             if (result.success) {
-                socket.join(gameId);
+                socket.join(normalizedGameId);
 
                 // Send current room state to the player who joined
                 socket.emit('room_state', {
@@ -31,28 +32,30 @@ export const configureSocket = (io: Server) => {
                 });
 
                 // Notify everyone in the room (including the joining player)
-                io.to(gameId).emit('player_joined', {
+                io.to(normalizedGameId).emit('player_joined', {
                     playerId: socket.id,
                     playerName: playerName
                 });
-                console.log(`Player ${playerName} joined room: ${gameId}`);
+                console.log(`Player ${playerName} joined room: ${normalizedGameId}`);
             } else {
                 socket.emit('error', { message: result.message });
             }
         });
 
         socket.on('start_game', (gameId: string) => {
-            const result = gameController.startGame(gameId, io);
+            const normalizedGameId = gameId.toUpperCase();
+            const result = gameController.startGame(normalizedGameId, io);
             if (!result.success) {
                 socket.emit('error', { message: result.message });
             }
         });
 
         socket.on('game_action', ({ gameId, action }: { gameId: string, action: any }) => {
-            const broadcastData = gameController.handleAction(gameId, socket.id, action, io);
+            const normalizedGameId = gameId.toUpperCase();
+            const broadcastData = gameController.handleAction(normalizedGameId, socket.id, action, io);
             
             if (broadcastData) {
-                io.to(gameId).emit('action_broadcasted', broadcastData);
+                io.to(normalizedGameId).emit('action_broadcasted', broadcastData);
             }
         });
 
