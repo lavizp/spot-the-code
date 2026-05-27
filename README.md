@@ -38,7 +38,7 @@ spot-the-code/
     Clone the repository:
     Bash
 
-    git clone [https://github.com/lavizp/spot-the-code.git](https://github.com/lavizp/spot-the-code.git)
+    git clone https://github.com/lavizp/spot-the-code.git
     cd spot-the-code
 
     Install dependencies:
