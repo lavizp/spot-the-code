@@ -25,6 +25,7 @@
   "packageManager": "bun@1.3.3",
   "dependencies": {
     "@spot-the-code/env": "workspace:*",
+    "@tanstack/react-router": "^1.169.2",
     "dotenv": "catalog:",
     "zod": "catalog:"
   },

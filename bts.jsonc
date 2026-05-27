@@ -10,7 +10,7 @@
   "backend": "self",
   "runtime": "none",
   "frontend": [
-    "tanstack-start"
+    "tanstack-router"
   ],
   "addons": [],
   "examples": [],
