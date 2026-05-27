@@ -1,34 +1,55 @@
-# Web App - Vercel Deployment
+# Spot The Code
 
-This `apps/web` package is a TanStack Start application configured for Server-Side Rendering (SSR) on Vercel using a manual Serverless Function approach.
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen.svg)](https://spot-the-code.lavizpandey.com.np/)
 
-## How it works
+![Spot The Code Screenshot](https://via.placeholder.com/800x400?text=Screenshot+Placeholder)
 
-1.  **Build**: `vite build` generates:
-    -   `dist/client`: Static assets (CSS, JS, images) served globally by Vercel's Edge Network.
-    -   `dist/server`: The server-side code used by the SSR function.
-2.  **Entry Point**: `api/vercel.js` acts as the Vercel Serverless Function entry point. It imports the server handler from `dist/server` and adapts the Node.js request/response to the TanStack Start server.
-3.  **Routing**: `vercel.json` handles routing. It serves static assets directly and rewrites all other requests to the `/api/vercel` function for SSR.
+A free, programming-style Geoguessr clone. Test your knowledge by guessing the origin, language, or context of various code snippets. 
 
-## Deployment Steps
+This project was built using [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that integrates React, TanStack Start, and other modern web tooling.
 
-1.  **Push to Git**: Ensure your code is pushed to your remote repository.
-2.  **Import Project**: Go to the Vercel Dashboard and click "Add New..." -> "Project". Import your repository.
-3.  **Project Settings**:
-    -   **Root Directory**: Edit this to `apps/web`.
-    -   **Framework Preset**: Select `Vite`.
-    -   **Build Command**: `vite build` (Default).
-    -   **Output Directory**: `dist/client`. **Important**: Vercel needs to serve the static assets from here.
-4.  **Environment Variables**:
-    -   Add `VITE_API_URL`: The URL of your backend API (e.g., `https://api.your-domain.com`).
-5.  **Deploy**: Click "Deploy".
+## Tech Stack
 
-## Local Development vs Production
+* **TypeScript** - Type safety and tooling
+* **TanStack Start** - SSR framework with TanStack Router
+* **TailwindCSS** - Utility-first styling
+* **shadcn/ui** - Accessible, reusable UI components
+* **Bun** - Fast JavaScript runtime and package manager
 
--   **Development**: `bun dev` uses Vite's dev server with SSR support.
--   **Production**: The built application uses the Vercel Serverless Function defined in `api/vercel.js`.
+## Project Structure
 
-## Files of Interest
+This project uses a monorepo setup:
 
--   `api/vercel.js`: The adapter connecting Vercel's request object to the TanStack Start app.
--   `vercel.json`: Configures rewrite rules to bypass the function for static assets.
+```text
+spot-the-code/
+├── apps/
+│   └── web/         # Fullstack application (React + TanStack Start)
+├── packages/
+│   ├── api/         # API layer / business logic
+└── bun.lock
+```
+# Local Development
+## Prerequisites
+
+    Bun installed on your machine.
+
+## Setup
+
+    Clone the repository:
+    Bash
+
+    git clone [https://github.com/lavizp/spot-the-code.git](https://github.com/lavizp/spot-the-code.git)
+    cd spot-the-code
+
+    Install dependencies:
+    Bash
+
+    bun install
+
+    Start the development server:
+    Bash
+
+    bun run dev
+
+The application will be available at http://localhost:3001.
+
