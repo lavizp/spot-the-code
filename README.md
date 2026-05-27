@@ -42,12 +42,10 @@ spot-the-code/
     cd spot-the-code
 
     Install dependencies:
-    Bash
 
     bun install
 
     Start the development server:
-    Bash
 
     bun run dev
 
